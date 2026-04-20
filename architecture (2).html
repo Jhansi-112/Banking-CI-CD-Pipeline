@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Banking CI/CD Pipeline — DevOps Architecture Diagram</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Outfit:wght@400;600;700&display=swap" rel="stylesheet"/>
+<style>
+:root{--navy:#080e1c;--navy2:#0c1428;--navy3:#101b38;--gold:#f0b840;--cyan:#30d5c8;--white:#e8eeff;--muted:#6a7a9c;--border:rgba(240,184,64,0.2);--green:#22c55e}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--navy);color:var(--white);font-family:'Outfit',sans-serif;min-height:100vh;padding:32px}
+body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(20,40,100,0.06) 1px,transparent 1px),linear-gradient(90deg,rgba(20,40,100,0.06) 1px,transparent 1px);background-size:40px 40px;pointer-events:none}
+
+.page{max-width:1200px;margin:0 auto;position:relative;z-index:1}
+.header{text-align:center;margin-bottom:40px}
+.header h1{font-size:28px;font-weight:700;letter-spacing:-.01em;margin-bottom:6px}
+.header h1 span{color:var(--gold)}
+.header p{font-size:13px;color:var(--muted);font-family:'DM Mono',monospace}
+
+/* SECTION WRAPPER */
+.arch-section{margin-bottom:24px}
+.arch-label{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:0.15em;text-transform:uppercase;color:var(--muted);margin-bottom:10px;display:flex;align-items:center;gap:8px}
+.arch-label::after{content:'';flex:1;height:1px;background:var(--border)}
+
+/* FLOW ROW */
+.flow-row{display:flex;align-items:stretch;gap:0;overflow-x:auto}
+.node{background:var(--navy3);border:1px solid var(--border);border-radius:10px;padding:14px 16px;min-width:130px;text-align:center;flex-shrink:0;position:relative;transition:border-color .25s}
+.node:hover{border-color:rgba(240,184,64,0.5)}
+.node-icon{font-size:22px;margin-bottom:6px}
+.node-title{font-size:12px;font-weight:700;color:var(--white);margin-bottom:3px}
+.node-sub{font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);line-height:1.4}
+.node-ver{font-family:'DM Mono',monospace;font-size:9px;color:var(--gold);margin-top:4px}
+.node.gold{border-color:rgba(240,184,64,0.4);background:rgba(240,184,64,0.05)}
+.node.cyan{border-color:rgba(48,213,200,0.4);background:rgba(48,213,200,0.04)}
+.node.green{border-color:rgba(34,197,94,0.4);background:rgba(34,197,94,0.04)}
+.node.orange{border-color:rgba(249,115,22,0.4);background:rgba(249,115,22,0.04)}
+.node.purple{border-color:rgba(168,85,247,0.4);background:rgba(168,85,247,0.04)}
+
+/* ARROW */
+.arr{display:flex;align-items:center;padding:0 6px;flex-shrink:0;color:var(--gold);font-size:18px;align-self:center}
+.arr-down{text-align:center;font-size:18px;color:var(--gold);padding:8px 0;line-height:1}
+.arr-label{font-family:'DM Mono',monospace;font-size:9px;color:var(--muted);display:block;margin-top:2px}
+
+/* JENKINS INNER */
+.jenkins-inner{flex:1;background:rgba(240,184,64,0.03);border:1px solid rgba(240,184,64,0.25);border-radius:10px;padding:14px;display:flex;flex-direction:column;gap:10px;min-width:620px}
+.jenkins-label{font-family:'DM Mono',monospace;font-size:10px;color:rgba(240,184,64,0.7);letter-spacing:.12em;text-transform:uppercase;margin-bottom:2px}
+.stages-row{display:flex;gap:0}
+.stage{flex:1;background:var(--navy2);border:1px solid var(--border);border-right:none;padding:10px 8px;text-align:center;min-width:80px}
+.stage:first-child{border-radius:8px 0 0 8px}
+.stage:last-child{border-right:1px solid var(--border);border-radius:0 8px 8px 0}
+.stage-icon{font-size:16px;margin-bottom:4px}
+.stage-name{font-size:10px;font-weight:700;color:var(--white);margin-bottom:2px}
+.stage-cmd{font-family:'DM Mono',monospace;font-size:8.5px;color:var(--cyan);line-height:1.3}
+.stage-time{font-family:'DM Mono',monospace;font-size:8px;color:var(--green);margin-top:4px}
+
+/* K8S / CLUSTER BOX */
+.cluster{border:1px dashed rgba(48,213,200,0.35);border-radius:12px;padding:16px;background:rgba(48,213,200,0.02)}
+.cluster-label{font-family:'DM Mono',monospace;font-size:10px;color:var(--cyan);letter-spacing:.12em;text-transform:uppercase;margin-bottom:12px}
+.cluster-row{display:flex;gap:12px;flex-wrap:wrap}
+
+/* EC2 BOX */
+.ec2-box{border:1px solid rgba(240,184,64,0.25);border-radius:10px;padding:14px;background:rgba(240,184,64,0.03);flex:1;min-width:220px}
+.ec2-label{font-family:'DM Mono',monospace;font-size:10px;color:rgba(240,184,64,0.7);margin-bottom:8px;letter-spacing:.1em;text-transform:uppercase}
+.ec2-detail{font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);line-height:1.8}
+.ec2-detail .ip{color:var(--cyan)}
+.ec2-detail .ok{color:var(--green)}
+
+/* MONITORING */
+.mon-row{display:flex;gap:12px;flex-wrap:wrap}
+.mon-box{flex:1;min-width:180px;background:var(--navy3);border-radius:10px;padding:14px;border:1px solid var(--border)}
+.mon-box.pr{border-color:rgba(249,115,22,0.35);background:rgba(249,115,22,0.04)}
+.mon-box.gr{border-color:rgba(245,158,11,0.35);background:rgba(245,158,11,0.04)}
+.mon-box.ne{border-color:rgba(34,197,94,0.35);background:rgba(34,197,94,0.04)}
+.mon-title{font-size:12px;font-weight:700;margin-bottom:6px;display:flex;align-items:center;gap:6px}
+.mon-detail{font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);line-height:1.7}
+.mon-detail .up{color:var(--green);font-weight:600}
+.mon-detail .ip{color:var(--cyan)}
+
+/* RESULT BOX */
+.result{background:rgba(34,197,94,0.06);border:1px solid rgba(34,197,94,0.35);border-radius:12px;padding:20px 24px;display:flex;align-items:center;gap:20px;flex-wrap:wrap}
+.result-icon{font-size:40px;flex-shrink:0}
+.result-text h3{font-size:16px;font-weight:700;color:var(--green);margin-bottom:4px}
+.result-text p{font-size:12px;color:var(--muted);font-family:'DM Mono',monospace;line-height:1.6}
+
+/* STATUS */
+.status-chip{display:inline-flex;align-items:center;gap:4px;background:rgba(34,197,94,0.15);border:1px solid rgba(34,197,94,0.3);border-radius:100px;padding:2px 9px;font-size:10px;color:var(--green);font-weight:600;font-family:'DM Mono',monospace}
+.status-chip::before{content:'●';font-size:7px}
+
+.legend{display:flex;flex-wrap:wrap;gap:16px;margin-top:32px;padding-top:20px;border-top:1px solid var(--border)}
+.leg{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--muted)}
+.leg-dot{width:10px;height:10px;border-radius:2px}
+
+@media(max-width:800px){body{padding:16px}.jenkins-inner{min-width:auto}.stages-row{flex-wrap:wrap}}
+</style>
+</head>
+<body>
+<div class="page">
+
+  <div class="header">
+    <h1>Banking CI/CD Pipeline — <span>DevOps Architecture</span></h1>
+    <p>Jhansi-112/Banking-CI-CD-Pipeline · AWS us-east-1 · Build #4: Oct 28 2024 · Total: 3min 23s</p>
+  </div>
+
+  <!-- ══════ SECTION 1: SOURCE CONTROL ══════ -->
+  <div class="arch-section">
+    <div class="arch-label">① Source Control &amp; Trigger</div>
+    <div class="flow-row">
+      <div class="node gold">
+        <div class="node-icon">👩‍💻</div>
+        <div class="node-title">Developer</div>
+        <div class="node-sub">git push<br/>master branch</div>
+      </div>
+      <div class="arr">→</div>
+      <div class="node gold">
+        <div class="node-icon">🐙</div>
+        <div class="node-title">GitHub</div>
+        <div class="node-sub">Jhansi-112/<br/>Banking-CI-CD-Pipeline</div>
+        <div class="node-ver">Webhook trigger</div>
+      </div>
+      <div class="arr">→<span class="arr-label">webhook</span></div>
+      <div class="node gold">
+        <div class="node-icon">🔧</div>
+        <div class="node-title">Jenkins Server</div>
+        <div class="node-sub">i-0fbe600dbd28f8da3<br/>50.17.98.208:8080<br/>t2.medium · Amazon Linux</div>
+        <div class="node-ver">Jenkins 2.462.3 · Java 17</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════ SECTION 2: JENKINS PIPELINE ══════ -->
+  <div class="arch-section">
+    <div class="arch-label">② Jenkins CI/CD Pipeline — 7 Stages · Build #4 · All Green ✅</div>
+    <div class="jenkins-inner">
+      <div class="jenkins-label">BankingProject · agent any · tools { maven "M2_HOME" }</div>
+      <div class="stages-row">
+        <div class="stage">
+          <div class="stage-icon">✅</div>
+          <div class="stage-name">Checkout SCM</div>
+          <div class="stage-cmd">Declarative<br/>Checkout SCM</div>
+          <div class="stage-time">228ms</div>
+        </div>
+        <div class="stage">
+          <div class="stage-icon">✅</div>
+          <div class="stage-name">Tool Install</div>
+          <div class="stage-cmd">Maven M2_HOME<br/>PATH+MAVEN</div>
+          <div class="stage-time">96ms</div>
+        </div>
+        <div class="stage">
+          <div class="stage-icon">✅</div>
+          <div class="stage-name">Build</div>
+          <div class="stage-cmd">git clone<br/>mvn clean package</div>
+          <div class="stage-time">12s</div>
+        </div>
+        <div class="stage">
+          <div class="stage-icon">✅</div>
+          <div class="stage-name">Test Reports</div>
+          <div class="stage-cmd">publishHTML<br/>surefire-reports</div>
+          <div class="stage-time">184ms</div>
+        </div>
+        <div class="stage">
+          <div class="stage-icon">✅</div>
+          <div class="stage-name">Docker Image</div>
+          <div class="stage-cmd">docker build<br/>banking-demo:1.0</div>
+          <div class="stage-time">1s</div>
+        </div>
+        <div class="stage">
+          <div class="stage-icon">✅</div>
+          <div class="stage-name">Login + Push</div>
+          <div class="stage-cmd">docker login<br/>docker push :1.0</div>
+          <div class="stage-time">4s + 4.8s</div>
+        </div>
+        <div class="stage">
+          <div class="stage-icon">✅</div>
+          <div class="stage-name">Config &amp; Deploy</div>
+          <div class="stage-cmd">Terraform + Ansible<br/>chmod→init→apply</div>
+          <div class="stage-time">3m 3s</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════ SECTION 3: DOCKER REGISTRY ══════ -->
+  <div class="arch-section">
+    <div class="arch-label">③ Docker Registry</div>
+    <div class="flow-row" style="align-items:center">
+      <div class="node gold" style="min-width:160px">
+        <div class="node-icon">🐳</div>
+        <div class="node-title">DockerHub Registry</div>
+        <div class="node-sub">jhansi977/<br/>banking-project-demo</div>
+        <div class="node-ver">Tags: 1.0 · 3.0 · 696MB each</div>
+      </div>
+      <div class="arr">→<span class="arr-label">docker push :1.0</span></div>
+      <div style="flex:1;background:rgba(13,21,48,0.6);border:1px solid var(--border);border-radius:10px;padding:14px 18px">
+        <div style="font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);line-height:1.8">
+          <span style="color:var(--gold)">Repository:</span> hub.docker.com/r/jhansi977/banking-project-demo<br/>
+          <span style="color:var(--gold)">Image size:</span> 696MB · OS: Linux/amd64<br/>
+          <span style="color:var(--gold)">Tags:</span> 1.0 (latest push) · 3.0 (previous)<br/>
+          <span style="color:var(--gold)">CMD:</span> java -jar /app.jar<br/>
+          <span style="color:var(--gold)">Port mapping:</span> 0.0.0.0:8084→8081/tcp
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════ SECTION 4: TERRAFORM ══════ -->
+  <div class="arch-section">
+    <div class="arch-label">④ Terraform — Infrastructure as Code</div>
+    <div style="display:flex;gap:12px;flex-wrap:wrap">
+      <div class="ec2-box" style="border-color:rgba(168,85,247,0.3);background:rgba(168,85,247,0.03)">
+        <div class="ec2-label">Terraform Config (terraform-files/)</div>
+        <div class="ec2-detail">
+          <span style="color:var(--gold)">provider.tf:</span> region = "us-east-1"<br/>
+          <span style="color:var(--gold)">main.tf:</span> aws_instance "test-server"<br/>
+          &nbsp;&nbsp;ami = ami-06b21ccaeff8cd686<br/>
+          &nbsp;&nbsp;instance_type = t2.micro<br/>
+          &nbsp;&nbsp;key_name = mykey-project<br/>
+          &nbsp;&nbsp;sg = sg-060316f6d3f0dec32<br/>
+          <span style="color:var(--gold)">local-exec 1:</span> echo public_ip &gt; inventory<br/>
+          <span style="color:var(--gold)">local-exec 2:</span> ansible-playbook ...yml<br/>
+          <span style="color:var(--gold)">Provider:</span> hashicorp/aws v5.73.0
+        </div>
+      </div>
+      <div class="arr" style="align-self:center">→<span class="arr-label">terraform apply</span></div>
+      <div class="ec2-box" style="border-color:rgba(34,197,94,0.35);background:rgba(34,197,94,0.04)">
+        <div class="ec2-label" style="color:var(--green)">New EC2 Created — test-server</div>
+        <div class="ec2-detail">
+          <span style="color:var(--gold)">Instance ID:</span> <span class="ip">i-0a71acc8b0b2edcb5</span><br/>
+          <span style="color:var(--gold)">Public IP:</span> <span class="ip">52.55.21.187</span><br/>
+          <span style="color:var(--gold)">Private IP:</span> <span class="ip">172.31.44.226</span><br/>
+          <span style="color:var(--gold)">Type:</span> t2.micro · Amazon Linux<br/>
+          <span style="color:var(--gold)">Created in:</span> 1m 26s<br/>
+          <span style="color:var(--gold)">State:</span> <span class="ok">✅ Running</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════ SECTION 5: ANSIBLE ══════ -->
+  <div class="arch-section">
+    <div class="arch-label">⑤ Ansible — Configuration &amp; Deployment</div>
+    <div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap">
+      <div class="node cyan" style="min-width:200px">
+        <div class="node-icon">📜</div>
+        <div class="node-title">Ansible 2.15.3</div>
+        <div class="node-sub">ansibleplaybook.yml<br/>ansible.cfg · inventory<br/>remote_user: ec2-user</div>
+        <div class="node-ver">ok=5 · changed=4 · failed=0</div>
+      </div>
+      <div class="arr">→<span class="arr-label">SSH via PEM</span></div>
+      <div style="flex:1;background:rgba(13,21,48,0.6);border:1px solid rgba(48,213,200,0.2);border-radius:10px;padding:14px 18px">
+        <div style="font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);line-height:1.9">
+          <span style="color:var(--cyan)">Task 1:</span> sudo yum update<br/>
+          <span style="color:var(--cyan)">Task 2:</span> sudo yum install docker -y<br/>
+          <span style="color:var(--cyan)">Task 3:</span> sudo systemctl start docker<br/>
+          <span style="color:var(--cyan)">Task 4:</span> docker run -itd -p 8084:8081 jhansi977/banking-project-demo:1.0<br/>
+          <span style="color:var(--green)">Result:</span> ok=5  changed=4  unreachable=0  failed=0  skipped=0
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════ SECTION 6: LIVE APP ══════ -->
+  <div class="arch-section">
+    <div class="arch-label">⑥ Live Application</div>
+    <div class="result">
+      <div class="result-icon">🏦</div>
+      <div class="result-text">
+        <h3>🎉 CUSTOMER BANKING SERVICES — Live on AWS!</h3>
+        <p>
+          Container: 0c8064116d89 (exciting_morse) · Image: jhansi977/banking-project-demo:1.0<br/>
+          Command: "java -jar /app.jar" · Port: 0.0.0.0:8084→8081/tcp · Status: Up<br/>
+          URL: <span style="color:var(--cyan)">http://52.55.21.187:8084</span> · Built on EC2: i-0a71acc8b0b2edcb5 (test-server) · t2.micro
+        </p>
+      </div>
+      <div class="status-chip">Running</div>
+    </div>
+  </div>
+
+  <!-- ══════ SECTION 7: MONITORING ══════ -->
+  <div class="arch-section">
+    <div class="arch-label">⑦ Monitoring Stack — Prometheus + Node Exporter + Grafana</div>
+    <div class="cluster" style="border-color:rgba(249,115,22,0.3)">
+      <div class="cluster-label" style="color:rgba(249,115,22,0.8)">Monitoring EC2: i-0cfc4717d4c4bfdc5 (Monitoring-prometheus) · 54.91.220.8 · 172.31.32.120</div>
+      <div class="mon-row">
+        <div class="mon-box ne">
+          <div class="mon-title">📡 Node Exporter <span class="status-chip">UP</span></div>
+          <div class="mon-detail">
+            <span style="color:var(--gold)">Version:</span> 1.8.2<br/>
+            <span style="color:var(--gold)">Location:</span> test-server<br/>
+            <span style="color:var(--gold)">Host:</span> <span class="ip">52.55.21.187</span><br/>
+            <span style="color:var(--gold)">Port:</span> 9100<br/>
+            <span style="color:var(--gold)">Metrics:</span> /metrics<br/>
+            <span style="color:var(--gold)">Collecting:</span> CPU, Memory,<br/>Disk, Network, Load
+          </div>
+        </div>
+        <div class="arr" style="align-self:center">→<span class="arr-label">scrape 15s</span></div>
+        <div class="mon-box pr">
+          <div class="mon-title">🔥 Prometheus <span class="status-chip">UP</span></div>
+          <div class="mon-detail">
+            <span style="color:var(--gold)">Version:</span> 2.53.2<br/>
+            <span style="color:var(--gold)">Port:</span> 9090<br/>
+            <span style="color:var(--gold)">Target 1:</span> <span class="up">node_exporter UP</span><br/>
+            &nbsp;52.55.21.187:9100<br/>
+            &nbsp;scrape: 13.8s · 16ms<br/>
+            <span style="color:var(--gold)">Target 2:</span> <span class="up">prometheus UP</span><br/>
+            &nbsp;54.91.220.8:9090<br/>
+            &nbsp;scrape: 8.4s · 5.78ms
+          </div>
+        </div>
+        <div class="arr" style="align-self:center">→<span class="arr-label">datasource</span></div>
+        <div class="mon-box gr">
+          <div class="mon-title">📊 Grafana v11.3.0 <span class="status-chip">Live</span></div>
+          <div class="mon-detail">
+            <span style="color:var(--gold)">Port:</span> 3000<br/>
+            <span style="color:var(--gold)">Datasource:</span> Prometheus<br/>
+            &nbsp;http://54.91.220.8:9090<br/>
+            <span style="color:var(--gold)">Dashboard:</span> Server Metrics<br/>
+            &nbsp;CPU/Memory/Disk/Network<br/>
+            <span style="color:var(--gold)">Host:</span> 52.55.21.187:9100<br/>
+            <span style="color:var(--gold)">Status:</span> <span class="up">✅ API queried OK</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════ FULL FLOW SUMMARY ══════ -->
+  <div class="arch-section">
+    <div class="arch-label">Complete Flow Summary</div>
+    <div style="background:var(--navy2);border:1px solid var(--border);border-radius:12px;padding:20px 24px">
+      <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-size:12px;font-family:'DM Mono',monospace;color:var(--muted);line-height:2">
+        <span style="color:var(--white);font-weight:600">git push</span>
+        <span style="color:var(--gold)">→</span>
+        <span>GitHub Webhook</span>
+        <span style="color:var(--gold)">→</span>
+        <span>Jenkins Triggered</span>
+        <span style="color:var(--gold)">→</span>
+        <span>Maven Build (12s)</span>
+        <span style="color:var(--gold)">→</span>
+        <span>Docker Build + Push</span>
+        <span style="color:var(--gold)">→</span>
+        <span>Terraform init/validate/apply</span>
+        <span style="color:var(--gold)">→</span>
+        <span>EC2 Created (1m26s)</span>
+        <span style="color:var(--gold)">→</span>
+        <span>Ansible SSH</span>
+        <span style="color:var(--gold)">→</span>
+        <span>Install Docker</span>
+        <span style="color:var(--gold)">→</span>
+        <span>Container Running</span>
+        <span style="color:var(--gold)">→</span>
+        <span style="color:var(--green);font-weight:600">🎉 App Live at 52.55.21.187:8084</span>
+        <span style="color:var(--gold)">→</span>
+        <span>Node Exporter → Prometheus → Grafana</span>
+        <span style="color:var(--gold)">→</span>
+        <span style="color:var(--green);font-weight:600">📊 Dashboards Live</span>
+      </div>
+      <div style="margin-top:14px;padding-top:14px;border-top:1px solid var(--border);display:flex;gap:24px;flex-wrap:wrap">
+        <div style="font-family:'DM Mono',monospace;font-size:10px;color:var(--muted)"><span style="color:var(--gold)">Total Pipeline:</span> 3 min 23 sec</div>
+        <div style="font-family:'DM Mono',monospace;font-size:10px;color:var(--muted)"><span style="color:var(--gold)">EC2 Instances:</span> 2 (Jenkins + Monitoring)</div>
+        <div style="font-family:'DM Mono',monospace;font-size:10px;color:var(--muted)"><span style="color:var(--gold)">Stages:</span> 7 (all ✅)</div>
+        <div style="font-family:'DM Mono',monospace;font-size:10px;color:var(--muted)"><span style="color:var(--gold)">Ansible:</span> ok=5, changed=4, failed=0</div>
+        <div style="font-family:'DM Mono',monospace;font-size:10px;color:var(--muted)"><span style="color:var(--gold)">Prom Targets:</span> 2/2 UP</div>
+        <div style="font-family:'DM Mono',monospace;font-size:10px;color:var(--muted)"><span style="color:var(--gold)">Region:</span> AWS us-east-1 (N. Virginia)</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="legend">
+    <div class="leg"><div class="leg-dot" style="background:rgba(240,184,64,0.5)"></div>Jenkins/Git/DockerHub</div>
+    <div class="leg"><div class="leg-dot" style="background:rgba(48,213,200,0.5)"></div>Ansible</div>
+    <div class="leg"><div class="leg-dot" style="background:rgba(168,85,247,0.5)"></div>Terraform</div>
+    <div class="leg"><div class="leg-dot" style="background:rgba(34,197,94,0.5)"></div>Live Application</div>
+    <div class="leg"><div class="leg-dot" style="background:rgba(249,115,22,0.5)"></div>Prometheus</div>
+    <div class="leg"><div class="leg-dot" style="background:rgba(245,158,11,0.5)"></div>Grafana</div>
+    <div style="margin-left:auto;font-family:'DM Mono',monospace;font-size:10px;color:var(--muted)">Built by Jhansi · Star Agile DevOps Training · Oct 2024</div>
+  </div>
+
+</div>
+</body>
+</html>
