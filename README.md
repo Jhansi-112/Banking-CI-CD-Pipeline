@@ -361,44 +361,6 @@ jenkins ALL=NOPASSWD: ALL
 
 ---
 
-## 📸 Screenshots
-
-All 40 screenshots are in the [`/screenshots`](./screenshots/) folder.
-
-| # | File | What it shows |
-|---|------|---------------|
-| 01 | `file1.PNG` | Jenkins .bashrc — JAVA_HOME, M2_HOME, PATH |
-| 02 | `file2.PNG` | Jenkins 2.462.3 + Java 17 + Maven 3.9.9 verified |
-| 03 | `file3.PNG` | Jenkins unlock screen at 50.17.98.208:8080 |
-| 04 | `file4.PNG` | git, Docker, Ansible all version checked |
-| 05 | `file5.PNG` | Terraform 1.9.8 installed |
-| 06 | `file6.PNG` | DockerHub — image pushed tags 1.0 + 3.0 |
-| 07 | `file7.PNG` | Jenkins credentials — Docker, SSH, AWS |
-| 08 | `file8.PNG` | ansible.cfg in GitHub repo |
-| 09 | `file9.PNG` | ansibleplaybook.yml in GitHub repo |
-| 10 | `file10.PNG` | main.tf in GitHub repo |
-| 11 | `file11.PNG` | Jenkinsfile — Build, Test, Docker stages |
-| 12 | `file12.PNG` | Jenkinsfile — Login, Push, Deploy stages |
-| 13 | `file13.PNG` | Sudoers — jenkins NOPASSWD |
-| 14 | `file14.PNG` | Jenkins Build #4 — all 7 stages green |
-| 15-21 | `file15-21.PNG` | Full pipeline steps with timings |
-| 22 | `file22.PNG` | Terraform init success |
-| 23 | `file23.PNG` | Terraform apply + Ansible ok=5 changed=4 |
-| 24 | `file24.PNG` | AWS EC2 test-server Running |
-| 25 | `file25.PNG` | Banking app live at 52.55.21.187:8084 |
-| 26 | `file26.PNG` | Prometheus installed on monitoring EC2 |
-| 27 | `file27.PNG` | Node Exporter on test-server |
-| 28-29 | `file28-29.PNG` | Node Exporter UI + raw /metrics |
-| 30 | `file30.PNG` | prometheus.yml scrape config |
-| 31 | `file31.PNG` | Prometheus targets — both UP |
-| 32-33 | `file32-33.PNG` | Grafana installed + server logs |
-| 34 | `file34.PNG` | Grafana login page |
-| 35-36 | `file35-36.PNG` | Grafana datasource + API success |
-| 37-39 | `file37-39.PNG` | Grafana CPU, Memory, Load, Disk dashboards |
-| 40 | `file40.PNG` | Docker ps — container Up on Jenkins EC2 |
-
----
-
 ## 🚀 Run This Project Yourself
 
 **Step 1** — Fork this repo
@@ -431,14 +393,11 @@ Script Path: jenkinsfile
 
 ---
 
-## 🔗 Links
+## 🌐 Project Portfolio
 
-| Resource | Link |
-|----------|------|
-| 🌐 Portfolio | [View Portfolio](./portfolio.html) |
-| 🏗️ Architecture | [View Diagram](./architecture.html) |
-| 🐳 DockerHub | [jhansi977/banking-project-demo](https://hub.docker.com/r/jhansi977/banking-project-demo) |
-| 💻 GitHub | [Jhansi-112/Banking-CI-CD-Pipeline](https://github.com/Jhansi-112/Banking-CI-CD-Pipeline) |
+All screenshots, architecture diagram, and full project walkthrough are available here:
+
+**👉 [View Full Portfolio](https://jhansi-112.github.io/Banking-CI-CD-Pipeline/portfolio.html)**
 
 ---
 
