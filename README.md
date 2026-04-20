@@ -4,6 +4,14 @@
 
 ---
 
+## 🌐 Live Portfolio
+
+> 📌 Click below to view the full project — all screenshots, architecture diagram, and complete walkthrough:
+
+**👉 [View Full Portfolio Here](https://jhansi-112.github.io/Banking-CI-CD-Pipeline/portfolio.html)**
+
+---
+
 ## 🔍 Project Summary
 
 | Item | Detail |
@@ -390,14 +398,6 @@ Script Path: jenkinsfile
 **Step 6** — Click **Build Now** or push to GitHub — all 7 stages run automatically
 
 **Step 7** — Set up a second EC2 for monitoring and install Prometheus + Node Exporter + Grafana using the commands in the Monitoring Stack section
-
----
-
-## 🌐 Project Portfolio
-
-All screenshots, architecture diagram, and full project walkthrough are available here:
-
-**👉 [View Full Portfolio](https://jhansi-112.github.io/Banking-CI-CD-Pipeline/portfolio.html)**
 
 ---
 
